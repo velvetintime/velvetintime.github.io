@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <style>
+    body {
+      visibility: hidden;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro Fotográfico</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PANTALLA LOGIN -->
+  <div id="pantallaLogin" class="login-screen">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="login-logo">
+          <span class="login-logo-icono">&#128274;</span>
+        </div>
+        <h2>Acceso al sistema</h2>
+        <p class="login-subtitulo">Ingrese sus credenciales para continuar</p>
+      </div>
+
+      <div class="campo-login">
+        <label for="usuarioLogin">Usuario</label>
+        <div class="input-login">
+          <span class="input-login-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"/>
+            </svg>
+          </span>
+          <input type="text" id="usuarioLogin" placeholder="Ingrese usuario" autocomplete="username">
+        </div>
+      </div>
+
+      <div class="campo-login">
+        <label for="claveLogin">Contraseña</label>
+        <div class="input-login password-wrapper">
+          <span class="input-login-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-6 7.73V17a1 1 0 0 0 2 0v-1.27a2 2 0 1 0-2 0zM10 8V6a2 2 0 0 1 4 0v2z"/>
+            </svg>
+          </span>
+
+          <input type="password" id="claveLogin" placeholder="Ingrese contraseña" autocomplete="current-password">
+
+          <button
+            type="button"
+            id="toggleClave"
+            class="toggle-password"
+            aria-label="Mostrar contraseña"
+            aria-pressed="false"
+          >
+            <svg id="iconoOjoAbierto" class="icono-ojo" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5c-5.5 0-9.5 5.5-9.5 7s4 7 9.5 7 9.5-5.5 9.5-7-4-7-9.5-7zm0 11a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm0-6.5A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5z"/>
+            </svg>
+
+            <svg id="iconoOjoCerrado" class="icono-ojo oculto" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3.27 2 2 3.27l3.04 3.04A11.83 11.83 0 0 0 2.5 12c0 1.5 4 7 9.5 7a9.8 9.8 0 0 0 4.24-.94L20.73 22 22 20.73Zm8.85 8.85 2.03 2.03A2.5 2.5 0 0 1 12.12 10.85ZM12 7a4.94 4.94 0 0 1 4.95 4.95l2.1 2.1A12.2 12.2 0 0 0 21.5 12c0-1.5-4-7-9.5-7a9.4 9.4 0 0 0-2.96.5l1.68 1.68A5.2 5.2 0 0 1 12 7Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button id="btnIngresar" class="btn-login-principal" type="button">
+        <span class="icono-boton" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M10 17v-3H3v-4h7V7l5 5-5 5zm7-12H9V3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H9v-2h8V5z"/>
+          </svg>
+        </span>
+        <span>Acceder</span>
+      </button>
+
+      <div class="login-secundario">
+        ¿No tiene acceso?
+        <span id="btnAbrirSolicitud" class="link-acceso" role="button" tabindex="0">
+          Solicitar autorización
+        </span>
+      </div>
+
+      <p id="mensajeLogin" class="mensaje-login"></p>
+    </div>
+  </div>
+
+  <!-- APP REAL -->
+  <div id="appReal" style="display: none;">
+    <div class="barra-usuario">
+      <div class="barra-usuario-info">
+        <div class="avatar-admin-app" aria-hidden="true">AD</div>
+        <div class="usuario-header-texto">
+          <div class="usuario-header-saludo">Hola, <strong id="usuarioActivo">-</strong> <span class="emoji-saludo">👋</span></div>
+          <div class="usuario-header-rol">Rol: <span id="rolActivoTexto">Administrador</span></div>
+        </div>
+      </div>
+
+      <button id="cerrarSesion" type="button">
+        <span class="icono-boton" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M10 17v-3H3v-4h7V7l5 5-5 5zm7-12H9V3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H9v-2h8V5z"/>
+          </svg>
+        </span>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+
+    <div id="menuAdmin" class="app menu-admin" style="display:none; margin-top:16px;">
+      <div class="menu-admin-header">
+        <h2 class="menu-admin-titulo">Panel de administración</h2>
+      </div>
+      <div class="resumen-general-admin" aria-label="Resumen general">
+        <div class="resumen-general-cabecera">
+          <h2>Resumen general</h2>
+          <div id="fechaHoraResumenAdmin" class="fecha-hora-resumen"><span class="icono-resumen-fecha">◷</span> Hoy --/-- --:--</div>
+        </div>
+        <div class="resumen-general-grid">
+          <div class="resumen-card resumen-card-imagenes">
+            <span class="resumen-card-icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 11.5l2.5 3.01L14.5 10l4.5 6H5l3.5-4.5z"/></svg></span>
+            <strong id="resumenTotalImagenes">0</strong>
+            <span>Imágenes registradas</span>
+          </div>
+          <div class="resumen-card resumen-card-accesos">
+            <span class="resumen-card-icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8l1-6z"/></svg></span>
+            <strong id="resumenTotalAccesos">0</strong>
+            <span>Accesos al sistema</span>
+          </div>
+          <div class="resumen-card resumen-card-usuarios">
+            <span class="resumen-card-icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></span>
+            <strong id="resumenTotalUsuarios">0</strong>
+            <span>Usuarios activos</span>
+          </div>
+          <div class="resumen-card resumen-card-ultimo">
+            <span class="resumen-card-icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v1h20v-1c0-3.33-6.67-5-10-5z"/></svg></span>
+            <strong id="resumenUltimoUsuario">-</strong>
+            <span>Último usuario</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-admin-grid">
+        <button id="btnMenuRegistro" type="button" class="tarjeta-menu-admin">
+          <div class="tarjeta-menu-icono" aria-hidden="true">&#128247;</div>
+          <div class="tarjeta-menu-texto">
+            <div class="tarjeta-menu-titulo">Registro fotográfico</div>
+            <div class="tarjeta-menu-descripcion">Generar nueva imagen</div>
+          </div>
+        </button>
+
+        <button id="btnMenuHistorial" type="button" class="tarjeta-menu-admin">
+          <div class="tarjeta-menu-icono" aria-hidden="true">&#128194;</div>
+          <div class="tarjeta-menu-texto">
+            <div class="tarjeta-menu-titulo">Historial de imágenes</div>
+            <div class="tarjeta-menu-descripcion">Consultar, filtrar y descargar</div>
+          </div>
+        </button>
+
+        <button id="btnMenuActividad" type="button" class="tarjeta-menu-admin">
+          <div class="tarjeta-menu-icono" aria-hidden="true">&#128202;</div>
+          <div class="tarjeta-menu-texto">
+            <div class="tarjeta-menu-titulo">Actividad del sistema</div>
+            <div class="tarjeta-menu-descripcion">Ver ingresos y conexiones</div>
+          </div>
+        </button>
+
+        <button id="btnMenuUsuarios" type="button" class="tarjeta-menu-admin">
+          <div class="tarjeta-menu-icono" aria-hidden="true">&#128101;</div>
+          <div class="tarjeta-menu-texto">
+            <div class="tarjeta-menu-titulo">Administración de usuarios</div>
+            <div class="tarjeta-menu-descripcion">Activar, desactivar y desvincular</div>
+          </div>
+        </button>
+
+        <button id="btnMenuClaves" type="button" class="tarjeta-menu-admin tarjeta-menu-claves">
+          <div class="tarjeta-menu-icono tarjeta-menu-icono-claves" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M9 14a5 5 0 1 1 4.58-7H22v2h-2v2h-2v2h-2v2h-2.42A5 5 0 0 1 9 14zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+          </div>
+          <div class="tarjeta-menu-texto">
+            <div class="tarjeta-menu-titulo">Administración de claves</div>
+            <div class="tarjeta-menu-descripcion">Gestionar contraseñas del sistema</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div id="seccionRegistro" class="app" style="display:none;">
+      <div id="envolturaBotonVolverRegistro" class="envoltura-boton-volver" style="display:none;">
+        <button id="btnVolverMenuDesdeRegistro" type="button" class="btn-volver-menu">&larr; Volver al panel</button>
+      </div>
+
+
+      <div class="aviso-foto-importante">
+        <div class="aviso-foto-importante-icono" aria-hidden="true">&#8505;&#65039;</div>
+        <div class="aviso-foto-importante-texto">
+          <strong>IMPORTANTE:</strong><br>
+          Imagen en formato <b>FULL</b> (no en 3:4),<br>
+          con el máximo alejamiento activado.
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="foto">Foto</label>
+
+        <label for="foto" class="upload-box" id="uploadBox">
+          <div class="upload-icono">&#9729;&#65039;</div>
+          <div class="upload-texto">Toca para subir imagen</div>
+          <div class="upload-nombre" id="nombreArchivo">Sin archivos seleccionados</div>
+        </label>
+
+        <input type="file" id="foto" accept="image/*" hidden>
+      </div>
+
+      <div class="fila-doble">
+        <div class="campo">
+          <label for="fecha">Fecha</label>
+          <div class="input-icono input-select">
+            <input type="date" id="fecha">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="hora">Hora</label>
+          <div class="input-icono input-select">
+            <input type="time" id="hora" step="1" lang="en-US" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Lugar</label>
+        <div class="grupo-lugares">
+          <label class="tarjeta-lugar">
+            <input type="radio" name="tipoUnidad" id="opcionCamper" value="camper" checked>
+            <span class="tarjeta-lugar-contenido">
+              <span class="tarjeta-lugar-check">&#10003;</span>
+              <span class="tarjeta-lugar-icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H15a2 2 0 0 1 2 2v6h2a2 2 0 0 1 2 2v1.5a1.5 1.5 0 0 1-1.5 1.5H19a2 2 0 0 1-4 0H9a2 2 0 0 1-4 0H4.5A1.5 1.5 0 0 1 3 16.5v-9zM5 16a1 1 0 1 0 2 0 1 1 0 0 0-2 0zm10 0a1 1 0 1 0 2 0 1 1 0 0 0-2 0zM5.5 7A.5.5 0 0 0 5 7.5V13h10V7.5a.5.5 0 0 0-.5-.5z"/>
+                </svg>
+              </span>
+              <span class="tarjeta-lugar-texto">Camper</span>
+            </span>
+          </label>
+
+          <label class="tarjeta-lugar">
+            <input type="radio" name="tipoUnidad" id="opcionMovilBus" value="movil_bus">
+            <span class="tarjeta-lugar-contenido">
+              <span class="tarjeta-lugar-check">&#10003;</span>
+              <span class="tarjeta-lugar-icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 3h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3v2a1 1 0 1 1-2 0v-2H8v2a1 1 0 1 1-2 0v-2a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v5h14V6a1 1 0 0 0-1-1zm1 8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm10 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                </svg>
+              </span>
+              <span class="tarjeta-lugar-texto">Movil Bus</span>
+            </span>
+          </label>
+
+          <label class="tarjeta-lugar">
+            <input type="radio" name="tipoUnidad" id="opcionGrupoAla" value="grupo_ala">
+            <span class="tarjeta-lugar-contenido">
+              <span class="tarjeta-lugar-check">&#10003;</span>
+              <span class="tarjeta-lugar-icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 20h18v-2H3v2zm2-4h14V8.5L12 4 5 8.5V16zm5-6h4v2h-4v-2zm0 3h4v2h-4v-2z"/>
+                </svg>
+              </span>
+              <span class="tarjeta-lugar-texto">Grupo Ala</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="coordenadas">Coordenadas completas</label>
+        <div class="input-icono">
+          <span class="icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/>
+            </svg>
+          </span>
+
+          <input type="text" id="coordenadas" value="-6.4621941, -76.4250347">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="ubicacion">Ubicación</label>
+        <textarea id="ubicacion" rows="4">SAN MARTIN-SAN MARTIN-LA BANDA DE SHILCAYO KM. 611 + 1257</textarea>
+      </div>
+
+      <div class="botones">
+        <button id="generar" type="button">
+          <span class="icono-boton" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 5h4l2-2h4l2 2h4a2 2 0 0 1 2 2v10a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a2 2 0 0 1 2-2zm8 3.5A4.5 4.5 0 1 0 16.5 13 4.5 4.5 0 0 0 12 8.5z"/>
+            </svg>
+          </span>
+          <span>Generar imagen</span>
+        </button>
+
+        <button id="descargar" type="button">
+          <span class="icono-boton" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M5 20h14v-2H5v2zM11 4h2v8h3l-4 4-4-4h3V4z"/>
+            </svg>
+          </span>
+          <span>Descargar imagen</span>
+        </button>
+      </div>
+
+      <div class="preview-box">
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- PANEL ADMIN HISTORIAL -->
+    <div id="panelAdmin" class="app" style="display:none; margin-top:16px;">
+      <div id="envolturaBotonVolverHistorial" class="envoltura-boton-volver">
+        <button id="btnVolverMenuDesdeHistorial" type="button" class="btn-volver-menu">&larr; Volver al panel</button>
+      </div>
+      <div id="filtrosAdmin" style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+        <div class="campo" style="margin:0;">
+          <label for="filtroUsuarioAdmin">Buscar por usuario</label>
+          <div class="input-icono input-select">
+            <input
+              type="text"
+              id="filtroUsuarioAdmin"
+              placeholder="Escriba usuario"
+              autocomplete="off"
+            >
+          </div>
+        </div>
+
+        <div class="fila-doble">
+          <div class="campo" style="margin:0;">
+            <label for="filtroFechaDesdeAdmin">Fecha desde</label>
+            <div class="input-icono input-select">
+              <input type="date" id="filtroFechaDesdeAdmin">
+            </div>
+          </div>
+
+          <div class="campo" style="margin:0;">
+            <label for="filtroFechaHastaAdmin">Fecha hasta</label>
+            <div class="input-icono input-select">
+              <input type="date" id="filtroFechaHastaAdmin">
+            </div>
+          </div>
+        </div>
+
+        <div class="fila-doble" style="margin-top:0;">
+          <div class="campo" style="margin:0;">
+            <button id="btnRecargarHistorial" type="button" style="width:100%;">Actualizar historial</button>
+          </div>
+
+          <div class="campo" style="margin:0;">
+            <button id="btnLimpiarFiltrosAdmin" type="button" style="width:100%;">Limpiar filtros</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="historialAdmin"></div>
+
+      <div
+        id="paginacionAdmin"
+        style="display:none; margin-top:14px; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;"
+      >
+        <button
+          id="btnPaginaAnterior"
+          type="button"
+          style="background:#4b79bb; color:#fff; border:none; border-radius:8px; padding:10px 14px; cursor:pointer;"
+        >
+          Anterior
+        </button>
+
+        <span
+          id="infoPaginaAdmin"
+          style="font-weight:700; font-size:14px;"
+        >
+          Página 1 de 1
+        </span>
+
+        <button
+          id="btnPaginaSiguiente"
+          type="button"
+          style="background:#4b79bb; color:#fff; border:none; border-radius:8px; padding:10px 14px; cursor:pointer;"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+
+    <!-- PANEL ADMIN USUARIOS -->
+    <div id="panelUsuariosAdmin" class="app" style="display:none; margin-top:16px;">
+      <div id="envolturaBotonVolverUsuarios" class="envoltura-boton-volver">
+        <button id="btnVolverMenuDesdeUsuarios" type="button" class="btn-volver-menu">&larr; Volver al panel</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+        <div class="campo" style="margin:0;">
+          <label for="filtroUsuarioPanelAdmin">Buscar usuario</label>
+          <div class="input-icono input-select">
+            <input
+              type="text"
+              id="filtroUsuarioPanelAdmin"
+              placeholder="Escriba usuario"
+              autocomplete="off"
+            >
+          </div>
+        </div>
+
+        <div class="fila-doble" style="margin-top:0;">
+          <div class="campo" style="margin:0;">
+            <button id="btnRecargarUsuariosAdmin" type="button" style="width:100%;">Actualizar usuarios</button>
+          </div>
+
+          <div class="campo" style="margin:0;">
+            <button id="btnLimpiarUsuariosAdmin" type="button" style="width:100%;">Limpiar búsqueda</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="resumenUsuariosAdmin" style="margin-bottom:12px; padding:10px 12px; border:1px solid #d9d9d9; border-radius:10px; background:#f7f9fc; font-size:14px; font-weight:700; color:#1f2d3d;">
+        Mostrando 0 usuarios
+      </div>
+
+      <div id="listaUsuariosAdmin"></div>
+
+      <div class="bloque-solicitudes-admin">
+        <div class="bloque-solicitudes-admin-cabecera">
+          <h3>Solicitudes de acceso</h3>
+          <button id="btnRecargarSolicitudesAdmin" type="button" class="btn-secundario-panel">Actualizar solicitudes</button>
+        </div>
+        <div id="resumenSolicitudesAdmin" class="resumen-solicitudes-admin">Mostrando 0 solicitudes</div>
+        <div id="listaSolicitudesAdmin"></div>
+      </div>
+    </div>
+
+    <!-- PANEL ADMIN ACTIVIDAD -->
+    <div id="panelActividadAdmin" class="app" style="display:none; margin-top:16px;">
+      <div id="envolturaBotonVolverActividad" class="envoltura-boton-volver">
+        <button id="btnVolverMenuDesdeActividad" type="button" class="btn-volver-menu">&larr; Volver al panel</button>
+      </div>
+
+      <div id="filtrosActividadAdmin" class="filtros-actividad-admin">
+        <div class="fila-doble filtros-actividad-admin-fechas">
+          <div class="campo" style="margin:0;">
+            <label for="filtroFechaDesdeActividadAdmin">Fecha desde</label>
+            <div class="input-icono input-select">
+              <input type="date" id="filtroFechaDesdeActividadAdmin">
+            </div>
+          </div>
+
+          <div class="campo" style="margin:0;">
+            <label for="filtroFechaHastaActividadAdmin">Fecha hasta</label>
+            <div class="input-icono input-select">
+              <input type="date" id="filtroFechaHastaActividadAdmin">
+            </div>
+          </div>
+        </div>
+
+        <div class="fila-doble acciones-actividad-admin">
+          <div class="campo" style="margin:0;">
+            <button id="btnRecargarActividadAdmin" type="button" class="btn-actividad-admin btn-actividad-admin-actualizar">Actualizar actividad</button>
+          </div>
+
+          <div class="campo" style="margin:0;">
+            <button id="btnLimpiarActividadAdmin" type="button" class="btn-actividad-admin btn-actividad-admin-limpiar">Limpiar fechas</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="resumenActividadAdmin" class="resumen-actividad-admin">
+        Mostrando 0 registros de actividad
+      </div>
+
+      <div id="listaActividadAdmin"></div>
+    </div>
+
+    <!-- PANEL ADMIN CLAVES -->
+    <div id="panelClavesAdmin" class="app" style="display:none; margin-top:16px;">
+      <div id="envolturaBotonVolverClaves" class="envoltura-boton-volver">
+        <button id="btnVolverMenuDesdeClaves" type="button" class="btn-volver-menu">&larr; Volver al panel</button>
+      </div>
+
+      <div class="tarjeta-claves-admin-info">
+        <div class="tarjeta-claves-admin-info-titulo">Administrador de claves</div>
+        <div class="tarjeta-claves-admin-info-texto">
+          Solo el admin puede cambiar su propia clave. Las demás claves se muestran en modo lectura cuando están disponibles.
+        </div>
+      </div>
+
+      <div class="tarjeta-claves-admin">
+        <h3>Cambiar clave del administrador</h3>
+        <button id="btnAbrirCambioClaveAdmin" type="button" class="btn-clave-admin-principal">
+          <span class="icono-boton" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 14a5 5 0 1 1 4.9-6H22v2h-2v2h-2v2h-2v2h-2v-2h-1.1A5 5 0 0 1 7 14zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+          </span>
+          <span>Cambiar clave del admin</span>
+        </button>
+      </div>
+
+      <div class="tarjeta-claves-listado">
+        <h3>Claves registradas</h3>
+        <button id="btnRecargarClavesAdmin" type="button" class="btn-claves-secundario">Actualizar lista</button>
+        <p class="texto-claves-ayuda">
+          Solo lectura por ahora. Cuando una clave no puede mostrarse, el sistema indicará que está protegida.
+        </p>
+        <div id="listaClavesAdmin"></div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div id="modalSolicitudAcceso" class="modal-solicitud" style="display:none;">
+    <div class="modal-solicitud-backdrop" id="cerrarModalSolicitudBackdrop"></div>
+    <div class="modal-solicitud-contenido">
+      <div class="modal-solicitud-header">
+        <h3>Solicitar acceso</h3>
+        <p>Complete sus datos. Su solicitud será revisada dentro de las 24 horas a partir de este envío.</p>
+      </div>
+
+      <div class="campo-login">
+        <label for="usuarioSolicitud">Usuario</label>
+        <div class="input-login">
+          <span class="input-login-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"/>
+            </svg>
+          </span>
+          <input type="text" id="usuarioSolicitud" placeholder="Ingrese usuario" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="campo-login">
+        <label for="claveSolicitud">Clave</label>
+        <div class="input-login">
+          <span class="input-login-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-6 7.73V17a1 1 0 0 0 2 0v-1.27a2 2 0 1 0-2 0zM10 8V6a2 2 0 0 1 4 0v2z"/>
+            </svg>
+          </span>
+          <input type="password" id="claveSolicitud" placeholder="Ingrese clave" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="campo-login">
+        <label for="nombreCompletoSolicitud">Nombres completos</label>
+        <div class="input-login">
+          <span class="input-login-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"/>
+            </svg>
+          </span>
+          <input type="text" id="nombreCompletoSolicitud" placeholder="Ingrese nombres completos" autocomplete="name">
+        </div>
+      </div>
+
+      <div class="modal-solicitud-acciones">
+
+        <button id="btnEnviarSolicitud" type="button" class="btn-login">
+          <span class="icono-boton" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
+            </svg>
+          </span>
+          <span>Enviar solicitud</span>
+        </button>
+
+        <div class="cancelar-link-contenedor">
+          <button id="btnCancelarSolicitud" type="button" class="cancelar-link">
+            <span class="icono-cancelar" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.29 19.7 2.88 18.3 9.17 12 2.88 5.71 4.29 4.29l6.3 6.3 6.29-6.3z"/>
+              </svg>
+            </span>
+            <span>Cancelar</span>
+          </button>
+        </div>
+
+      </div>
+
+      <p id="mensajeSolicitud" class="mensaje-login mensaje-solicitud"></p>
+
+      <div id="accionesSolicitudExito" class="acciones-solicitud-exito" style="display:none;">
+        <button id="btnEntendidoSolicitud" type="button" class="btn-login btn-entendido-solicitud">
+          <span class="icono-boton" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          </span>
+          <span>Entendido</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalCambioClaveAdmin" class="modal-cambio-clave" style="display:none;">
+    <div class="modal-solicitud-backdrop" id="cerrarModalCambioClaveBackdrop"></div>
+    <div class="modal-cambio-clave-contenido">
+      <div class="modal-cambio-clave-header">
+        <h3>Cambio de clave</h3>
+        <p>Ingrese la nueva clave del admin y confirme antes de guardar.</p>
+      </div>
+
+      <div class="campo-login">
+        <label for="nuevaClaveAdmin">Nueva clave</label>
+        <div class="input-login">
+          <span class="input-login-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-6 7.73V17a1 1 0 0 0 2 0v-1.27a2 2 0 1 0-2 0zM10 8V6a2 2 0 0 1 4 0v2z"/>
+            </svg>
+          </span>
+          <input type="password" id="nuevaClaveAdmin" placeholder="Ingrese nueva clave" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="campo-login">
+        <label for="confirmarClaveAdmin">Confirmar nueva clave</label>
+        <div class="input-login">
+          <span class="input-login-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-6 7.73V17a1 1 0 0 0 2 0v-1.27a2 2 0 1 0-2 0zM10 8V6a2 2 0 0 1 4 0v2z"/>
+            </svg>
+          </span>
+          <input type="password" id="confirmarClaveAdmin" placeholder="Confirme nueva clave" autocomplete="new-password">
+        </div>
+      </div>
+
+      <button id="btnGuardarCambioClaveAdmin" type="button" class="btn-login btn-cambio-clave-guardar">
+        <span class="icono-boton" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 3H5a2 2 0 0 0-2 2v14l4-4h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
+          </svg>
+        </span>
+        <span>Guardar clave</span>
+      </button>
+
+      <button id="btnCancelarCambioClaveAdmin" type="button" class="btn-cambio-clave-cancelar">Cancelar</button>
+
+      <p id="mensajeCambioClaveAdmin" class="mensaje-login mensaje-cambio-clave"></p>
+    </div>
+  </div>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var linkAcceso = document.getElementById("btnAbrirSolicitud");
+      if (linkAcceso) {
+        linkAcceso.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            linkAcceso.click();
+          }
+        });
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
