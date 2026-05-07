@@ -24,9 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ACCESO DIRECTO ADMIN POR URL
   // =========================
   // Enlace directo para saltar la fachada y mostrar el login real:
-  // https://velvetintime.github.io/?admin=1
+  // https://velvetintime.github.io/?collection=blackvelvet
   const ACCESO_ADMIN_DIRECTO =
-    new URLSearchParams(window.location.search).get("admin") === "1";
+  new URLSearchParams(window.location.search).get("collection") === "blackvelvet";
 
   function activarAccesoAdminDirecto() {
     if (!ACCESO_ADMIN_DIRECTO) return;
