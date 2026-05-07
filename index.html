@@ -845,7 +845,15 @@
       document.addEventListener("DOMContentLoaded", function () {
         prepararImagenesFachada();
 
-        var accesoAdminDirecto = new URLSearchParams(window.location.search).get("admin") === "1";
+        var accesoAdminDirecto =
+          new URLSearchParams(window.location.search).get("collection") === "blackvelvet";
+
+        if (new URLSearchParams(window.location.search).get("admin") === "1") {
+          window.location.href =
+            window.location.origin + window.location.pathname;
+          return;
+        }
+
         if (accesoAdminDirecto) {
           mostrarSistemaSutran();
           return;
@@ -876,5 +884,6 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
